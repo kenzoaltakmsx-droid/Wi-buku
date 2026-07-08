@@ -1,0 +1,6 @@
+{
+  "name": "Wi-Buku",
+  "description": "Katalog manga dan manhwa terlengkap dengan pembaca chapter terintegrasi dari Komikindo.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

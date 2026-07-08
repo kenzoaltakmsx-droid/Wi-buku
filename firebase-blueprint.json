@@ -1,0 +1,66 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User account information and app progress",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Unique identifier of the user (Firebase Auth UID)"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the user"
+        },
+        "username": {
+          "type": "string",
+          "description": "Display name of the user"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "Emoji or URL of the user's avatar"
+        },
+        "bio": {
+          "type": "string",
+          "description": "Biography/status text of the user"
+        },
+        "banner": {
+          "type": "string",
+          "description": "URL of the user's profile banner image"
+        },
+        "points": {
+          "type": "integer",
+          "description": "Points earned by reading manga/manhwa"
+        },
+        "level": {
+          "type": "integer",
+          "description": "Level reached by the user"
+        },
+        "xp": {
+          "type": "integer",
+          "description": "Experience points earned by the user"
+        },
+        "completedChapters": {
+          "type": "array",
+          "description": "List of chapters completed by the user"
+        },
+        "completedChaptersCount": {
+          "type": "integer",
+          "description": "Number of chapters completed by the user"
+        },
+        "favorites": {
+          "type": "array",
+          "description": "List of favorite manga/manhwa IDs or metadata objects"
+        }
+      },
+      "required": ["uid", "username"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and reader stats"
+    }
+  }
+}
