@@ -11,7 +11,7 @@ import {
   scrapeSearch, 
   scrapeDetail, 
   scrapeChapter 
-} from './scrapper.js';
+} from './scrapper';
 
 // Load environment variables
 dotenv.config();

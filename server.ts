@@ -1,7 +1,7 @@
 import path from 'path';
 import { createServer as createViteServer } from 'vite';
 import express from 'express';
-import app from './server/app.js';
+import app from './server/app';
 
 const isProd = process.env.NODE_ENV === 'production';
 const PORT = 3000;
