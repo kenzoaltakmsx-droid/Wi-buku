@@ -1,6 +1,5 @@
 import express from 'express';
 import path from 'path';
-import dotenv from 'dotenv';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import multer from 'multer';
@@ -12,9 +11,6 @@ import {
   scrapeDetail, 
   scrapeChapter 
 } from './scrapper';
-
-// Load environment variables
-dotenv.config();
 
 // S3 Client for Cloudflare R2 with lazy initialization
 let s3Client: S3Client | null = null;
