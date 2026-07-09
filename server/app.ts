@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import multer from 'multer';
@@ -41,11 +42,20 @@ const app = express();
 // Izinkan Express mempercayai reverse proxy (Cloud Run / Nginx / Vercel) untuk mendeteksi IP asli klien
 app.set('trust proxy', 1);
 
+// Enable Cross-Origin Resource Sharing (CORS) for all routes
+app.use(cors({
+  origin: true, // Echo back the request origin dynamically, allowing any site to access the API under CORS rules
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 // 1. Keamanan Header HTTP via Helmet
 app.use(
   helmet({
     contentSecurityPolicy: false, // Dinonaktifkan agar hot-reloading & script Vite berfungsi
     crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" } // Allow resources (images, APIs) to be shared cross-origin
   })
 );
 
