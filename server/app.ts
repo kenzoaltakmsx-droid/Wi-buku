@@ -4,6 +4,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import multer from 'multer';
+import axios from 'axios';
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { 
   scrapeHomeCategories, 
@@ -226,6 +227,48 @@ app.get('/api/security-status', (req, res) => {
       description: 'Menyaring input pencarian dan pendaftaran dari skrip berbahaya (SQL Injection & XSS).'
     }
   });
+});
+
+// Image Proxy Endpoint to bypass CORS and referer hotlink protection
+app.get('/api/image-proxy', async (req, res) => {
+  const imageUrl = req.query.url;
+  if (!imageUrl || typeof imageUrl !== 'string') {
+    return res.status(400).json({ error: 'URL parameter is required' });
+  }
+
+  try {
+    // Generate referer dynamically based on target URL host
+    let referer = 'https://komikindo.tv/';
+    try {
+      const parsedUrl = new URL(imageUrl);
+      referer = `${parsedUrl.protocol}//${parsedUrl.host}/`;
+    } catch (e) {
+      // ignore
+    }
+
+    const response = await axios.get(imageUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36',
+        'Referer': referer,
+        'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
+      },
+      responseType: 'arraybuffer',
+      timeout: 15000,
+      validateStatus: (status) => status === 200, // Only accept successful status codes
+    });
+
+    const rawContentType = response.headers['content-type'];
+    const contentType = typeof rawContentType === 'string' ? rawContentType : 'image/jpeg';
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache for 1 day
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.send(response.data);
+  } catch (err: any) {
+    console.warn(`[Image Proxy Warning] Failed to proxy image: ${imageUrl}. Error: ${err.message || err}`);
+    // Redirect as fallback if the proxy fetch fails
+    res.redirect(imageUrl);
+  }
 });
 
 // Scraper API Endpoints

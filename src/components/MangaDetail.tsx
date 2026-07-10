@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ArrowLeft, Bookmark, BookmarkCheck, List, Sparkles, BookOpen } from 'lucide-react';
 import { useFavorites } from '../store';
 import { useTranslation } from '../translations';
+import { proxyImage } from '../utils';
 
 interface Chapter {
   title: string;
@@ -114,7 +115,7 @@ export default function MangaDetail({ url, onBack, onChapterSelect }: MangaDetai
       {/* Background Cover Blur Banner */}
       <div className="absolute top-0 left-0 w-full h-[240px] overflow-hidden z-0 opacity-20">
         <img 
-          src={data.thumb} 
+          src={proxyImage(data.thumb)} 
           alt={data.title} 
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover blur-3xl scale-125"
@@ -139,7 +140,7 @@ export default function MangaDetail({ url, onBack, onChapterSelect }: MangaDetai
           <div className="md:col-span-1 flex flex-col gap-4">
             <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-gray-900 shadow-2xl border border-gray-800">
               <img 
-                src={data.thumb} 
+                src={proxyImage(data.thumb)} 
                 alt={data.title} 
                 referrerPolicy="no-referrer"
                 className="w-full h-full object-cover object-center"

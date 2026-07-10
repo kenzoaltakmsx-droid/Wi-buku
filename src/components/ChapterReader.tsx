@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { ArrowLeft, ChevronLeft, ChevronRight, BookOpen, Settings, RefreshCw, ZoomIn, ZoomOut, Sparkles, CheckCircle, Trophy, Award, AlertCircle } from 'lucide-react';
 import { useUserStore } from '../store';
 import { useTranslation } from '../translations';
+import { proxyImage } from '../utils';
 
 interface ChapterData {
   title: string;
@@ -197,7 +198,7 @@ export default function ChapterReader({ url, onBackToManga, onChapterSelect }: C
           {data.images.map((img, index) => (
             <div key={index} className="relative w-full overflow-hidden bg-gray-950/40 min-h-[400px]">
               <img 
-                src={img} 
+                src={proxyImage(img)} 
                 alt={`${language === 'ID' ? 'Halaman' : 'Page'} ${index + 1}`} 
                 referrerPolicy="no-referrer"
                 loading="lazy"

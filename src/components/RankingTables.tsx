@@ -1,6 +1,7 @@
 import React from 'react';
 import { Star, Heart, TrendingUp, Award, Flame, User } from 'lucide-react';
 import { RANKING_ANIMES, RANKING_MANGAS, RANKING_CHARACTERS } from '../data';
+import { proxyImage } from '../utils';
 
 export default function RankingTables() {
   
@@ -60,7 +61,7 @@ export default function RankingTables() {
                   {/* Little Image Cover */}
                   <div className="w-10 h-14 rounded-lg overflow-hidden shrink-0 bg-gray-900 border border-gray-800 shadow-sm">
                     <img 
-                      src={item.imageUrl} 
+                      src={proxyImage(item.imageUrl)} 
                       alt={item.title} 
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform"
@@ -110,7 +111,7 @@ export default function RankingTables() {
                   {/* Little Image Cover */}
                   <div className="w-10 h-14 rounded-lg overflow-hidden shrink-0 bg-gray-900 border border-gray-800 shadow-sm">
                     <img 
-                      src={item.imageUrl} 
+                      src={proxyImage(item.imageUrl)} 
                       alt={item.title} 
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform"
@@ -160,7 +161,7 @@ export default function RankingTables() {
                   {/* Little Image Cover */}
                   <div className="w-10 h-14 rounded-lg overflow-hidden shrink-0 bg-gray-900 border border-gray-800 shadow-sm">
                     <img 
-                      src={item.imageUrl} 
+                      src={proxyImage(item.imageUrl)} 
                       alt={item.title} 
                       referrerPolicy="no-referrer"
                       className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform"

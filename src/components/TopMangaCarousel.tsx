@@ -1,6 +1,7 @@
 import React from 'react';
 import { Star, BookOpen, ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 import { TOP_MANGAS } from '../data';
+import { proxyImage } from '../utils';
 
 export default function TopMangaCarousel() {
   return (
@@ -48,7 +49,7 @@ export default function TopMangaCarousel() {
               {/* Cover Card */}
               <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-gray-900 shadow-[0_8px_20px_rgba(0,0,0,0.4)] group-hover:shadow-[0_0_20px_rgba(130,195,65,0.25)] transition-all duration-300">
                 <img 
-                  src={manga.imageUrl} 
+                  src={proxyImage(manga.imageUrl)} 
                   alt={manga.title} 
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"

@@ -93,4 +93,34 @@ export function fixUrlTypo(url: string | null | undefined): string {
   return url;
 }
 
+/**
+ * Wraps an image URL in a local Express-based proxy endpoint to bypass CORS and hotlink protection.
+ */
+export function proxyImage(url: string | null | undefined): string {
+  if (!url) return '';
+  const sanitized = fixUrlTypo(url);
+  
+  // Keep local paths, base64 data, and object URLs as they are
+  if (
+    sanitized.startsWith('data:') || 
+    sanitized.startsWith('/') || 
+    sanitized.startsWith('blob:') || 
+    sanitized.startsWith('http://localhost') || 
+    sanitized.startsWith('https://localhost') ||
+    sanitized.startsWith('127.0.0.1')
+  ) {
+    return sanitized;
+  }
+  
+  // If already uploaded to R2 custom domain or other user storage, keep it
+  if (
+    sanitized.includes('wibuku.vercel.my.id') || 
+    sanitized.includes('r2.cloudflarestorage.com')
+  ) {
+    return sanitized;
+  }
+  
+  return `/api/image-proxy?url=${encodeURIComponent(sanitized)}`;
+}
+
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { FEATURED_SLIDES } from '../data';
+import { proxyImage } from '../utils';
 
 export default function HeroCarousel() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -23,7 +24,7 @@ export default function HeroCarousel() {
         {/* Background Image with Rich Shadow/Gradient Overlay */}
         <div className="absolute inset-0 z-0">
           <img 
-            src={slide.imageUrl} 
+            src={proxyImage(slide.imageUrl)} 
             alt={slide.title} 
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover object-center scale-105 filter brightness-90 animate-[pulse_8s_infinite] transition-all duration-1000 ease-in-out"

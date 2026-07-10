@@ -7,6 +7,7 @@ import LeaderboardView from './components/LeaderboardView';
 import ProfileView from './components/ProfileView';
 import { useFavorites, useUserStore } from './store';
 import { useTranslation } from './translations';
+import { proxyImage } from './utils';
 import logoBuku from '@/assets/logo-buku.svg';
 import { Sparkles, Bookmark, Search, BookOpen, Star, RefreshCw, Layers, TrendingUp, Trophy, User, Home, X } from 'lucide-react';
 import { auth, signOut } from './lib/firebase';
@@ -151,7 +152,7 @@ export default function App() {
     return {
       title: "Solo Leveling (Only I Level Up)",
       desc: "Gerbang misterius menghubungkan dunia kita dengan dungeon yang penuh dengan monster. Sung Jin-Woo adalah pemburu peringkat E, namun segalanya berubah saat ia menemukan dungeon ganda.",
-      thumb: "https://upload.wikimedia.org/wikipedia/en/9/9f/Solo_Leveling_webtoon_volume_1_cover.jpg",
+      thumb: "https://images.unsplash.com/photo-1578632767115-351597cf2477?w=500&auto=format&fit=crop&q=80",
       link: "https://komikindo.tv/manga/solo-leveling/",
       score: "9.8"
     };
@@ -206,7 +207,7 @@ export default function App() {
                 <div className="relative w-full bg-[#111418] border border-gray-900/60 rounded-3xl p-4 md:p-8 overflow-hidden mb-5">
                   <div className="absolute inset-0 z-0 opacity-10">
                     <img 
-                      src={spotlight.thumb} 
+                      src={proxyImage(spotlight.thumb)} 
                       alt="Spotlight BG" 
                       className="w-full h-full object-cover blur-sm scale-105"
                       referrerPolicy="no-referrer"
@@ -233,7 +234,7 @@ export default function App() {
                     {/* Floating large cover image for spotlight on desktop */}
                     <div className="hidden md:block shrink-0 w-36 aspect-[2/3] rounded-xl overflow-hidden border border-zinc-800 shadow-2xl rotate-2 hover:rotate-0 transition-all duration-300">
                       <img 
-                        src={spotlight.thumb} 
+                        src={proxyImage(spotlight.thumb)} 
                         alt={spotlight.title}
                         referrerPolicy="no-referrer"
                         className="w-full h-full object-cover"
@@ -319,7 +320,7 @@ export default function App() {
                                   >
                                     <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-gray-900 border border-zinc-800/80 group-hover:border-[#82C341]/60 transition-all duration-300">
                                       <img 
-                                        src={manga.thumb} 
+                                        src={proxyImage(manga.thumb)} 
                                         alt={manga.title} 
                                         referrerPolicy="no-referrer"
                                         loading="lazy"
@@ -407,7 +408,7 @@ export default function App() {
                         >
                           <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-gray-900 border border-zinc-800/80 group-hover:border-[#82C341]/60 transition-all duration-300">
                             <img 
-                              src={manga.thumb} 
+                              src={proxyImage(manga.thumb)} 
                               alt={manga.title} 
                               referrerPolicy="no-referrer"
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -488,7 +489,7 @@ export default function App() {
                           >
                             <div className="relative aspect-[2/3] w-full rounded-2xl overflow-hidden bg-gray-900 border border-zinc-800/80 group-hover:border-[#82C341]/60 transition-all duration-300">
                               <img 
-                                src={manga.thumb} 
+                                src={proxyImage(manga.thumb)} 
                                 alt={manga.title} 
                                 referrerPolicy="no-referrer"
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
