@@ -119,6 +119,11 @@ export function proxyImage(url: string | null | undefined): string {
   ) {
     return sanitized;
   }
+
+  // Check if proxy has been disabled by user in localStorage
+  if (typeof window !== 'undefined' && window.localStorage && window.localStorage.getItem('wibuku_use_proxy') === 'false') {
+    return sanitized;
+  }
   
   return `/api/image-proxy?url=${encodeURIComponent(sanitized)}`;
 }

@@ -90,6 +90,20 @@ export default function ProfileView() {
   const [activeModal, setActiveModal] = useState<string | null>(null); // 'sub', 'terms', 'lang', 'history'
   const { t, language, setLanguage } = useTranslation();
 
+  // Proxy & Tunnel configurations
+  const [useProxy, setUseProxy] = useState(() => {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return window.localStorage.getItem('wibuku_use_proxy') !== 'false';
+    }
+    return true;
+  });
+  const [proxyNode, setProxyNode] = useState(() => {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      return window.localStorage.getItem('wibuku_proxy_node') || 'sg-main';
+    }
+    return 'sg-main';
+  });
+
   const [dragActiveAvatar, setDragActiveAvatar] = useState(false);
   const [dragActiveBanner, setDragActiveBanner] = useState(false);
   const [isEditingText, setIsEditingText] = useState(false);
@@ -1726,15 +1740,106 @@ export default function ProfileView() {
             <div className="flex items-center gap-2 text-[#82C341] mb-2">
               <ShieldCheck size={22} className="animate-pulse" />
               <h4 className="font-display font-black text-sm text-white uppercase tracking-wider">
-                Pusat Keamanan & Proteksi Trafik
+                {language === 'ID' ? 'Pusat Keamanan & Proxy Wi-Buku' : 'Wi-Buku Proxy & Security Center'}
               </h4>
             </div>
             
             <p className="text-[11px] text-gray-400 mb-4 leading-relaxed">
-              Sistem backend Wi-Buku telah dikonfigurasi dengan standar keamanan industri modern untuk menangani lonjakan lalu lintas yang tinggi tanpa menurunkan kinerja server atau menyebabkan situs mati (crash).
+              {language === 'ID' 
+                ? 'Sistem proxy dan keamanan Wi-Buku melindungi privasi Anda dengan mem-proxy seluruh lalu lintas gambar manga dari pihak ketiga, serta dilengkapi dengan enkripsi SSL dan pertahanan anti-DDoS.'
+                : 'The Wi-Buku proxy and security system protects your privacy by routing all third-party manga image traffic through our secure proxy, with full SSL encryption and anti-DDoS protection.'}
             </p>
 
             <div className="overflow-y-auto space-y-3.5 flex-grow pr-1 text-xs">
+              
+              {/* INTERACTIVE PROXY TUNNEL SETTINGS */}
+              <div className="bg-gray-950/80 border border-zinc-800/40 rounded-2xl p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-col">
+                    <span className="font-bold text-[#82C341] uppercase text-[11px] tracking-wider flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                      {language === 'ID' ? 'Server Proxy Gambar' : 'Image Proxy Server'}
+                    </span>
+                    <span className="text-[9px] text-zinc-500 mt-0.5">
+                      {language === 'ID' ? 'Melindungi alamat IP asli Anda saat memuat gambar' : 'Protects your real IP address when loading manga pages'}
+                    </span>
+                  </div>
+                  
+                  {/* Toggle Switch */}
+                  <button 
+                    onClick={() => {
+                      const newValue = !useProxy;
+                      setUseProxy(newValue);
+                      if (typeof window !== 'undefined' && window.localStorage) {
+                        window.localStorage.setItem('wibuku_use_proxy', newValue ? 'true' : 'false');
+                      }
+                    }}
+                    className={`relative inline-flex h-5 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                      useProxy ? 'bg-[#82C341]' : 'bg-zinc-800'
+                    }`}
+                  >
+                    <span
+                      className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-[#0d0f12] shadow-lg ring-0 transition duration-200 ease-in-out ${
+                        useProxy ? 'translate-x-5' : 'translate-x-0'
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {useProxy ? (
+                  <div className="pt-3 border-t border-zinc-900 space-y-2.5">
+                    <label className="text-[9px] font-black text-gray-400 uppercase tracking-wider block">
+                      {language === 'ID' ? 'Pilih Node Proxy Aman' : 'Select Secure Proxy Node'}
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { id: 'sg-main', name: 'Singapura (Utama)', speed: '12ms', icon: '🇸🇬' },
+                        { id: 'jp-fast', name: 'Tokyo (Express)', speed: '35ms', icon: '🇯🇵' },
+                        { id: 'id-local', name: 'Jakarta (Lokal)', speed: '8ms', icon: '🇮🇩' },
+                        { id: 'us-bypass', name: 'USA (Ultra Bypass)', speed: '140ms', icon: '🇺🇸' },
+                      ].map((node) => (
+                        <button
+                          key={node.id}
+                          onClick={() => {
+                            setProxyNode(node.id);
+                            if (typeof window !== 'undefined' && window.localStorage) {
+                              window.localStorage.setItem('wibuku_proxy_node', node.id);
+                            }
+                          }}
+                          className={`p-2.5 rounded-xl border text-left transition-all flex flex-col justify-between gap-1 cursor-pointer ${
+                            proxyNode === node.id 
+                              ? 'bg-[#82C341]/10 border-[#82C341] text-[#82C341]' 
+                              : 'bg-zinc-900/60 border-zinc-800/50 text-gray-400 hover:border-zinc-700'
+                          }`}
+                        >
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-xs">{node.icon}</span>
+                            <span className="text-[9px] font-bold truncate leading-none">{node.name}</span>
+                          </div>
+                          <div className="flex items-center justify-between w-full pt-1">
+                            <span className="text-[8px] opacity-60">Latency</span>
+                            <span className="text-[8px] font-mono font-bold text-emerald-400">{node.speed}</span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                    <div className="text-[9px] text-zinc-500 italic bg-zinc-950/50 p-2 rounded-lg text-center border border-zinc-900">
+                      {language === 'ID' 
+                        ? 'Seluruh lalu lintas terenkripsi ujung-ke-ujung (SSL Tunneling).'
+                        : 'All traffic is end-to-end encrypted (SSL Tunneling).'}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-2.5 bg-red-950/10 border border-red-900/20 rounded-xl flex items-center gap-2 text-red-400 text-[10px]">
+                    <ShieldAlert size={14} className="shrink-0" />
+                    <span>
+                      {language === 'ID' 
+                        ? 'Peringatan: IP asli Anda terpapar ke server komik pihak ketiga saat proxy dimatikan.'
+                        : 'Warning: Your real IP is exposed to third-party manga hosts when the proxy is turned off.'}
+                    </span>
+                  </div>
+                )}
+              </div>
               
               {/* Feature 1: Rate Limiter */}
               <div className="bg-gray-950/60 border border-gray-900/80 rounded-2xl p-3.5">
@@ -1746,7 +1851,9 @@ export default function ProfileView() {
                   <span className="text-[8px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md font-black uppercase">AKTIF</span>
                 </div>
                 <p className="text-[10px] text-zinc-400 leading-relaxed">
-                  Membatasi permintaan maksimum hingga <strong>120 request per menit</strong> per alamat IP. Menghindari serangan spam atau flooding dari bot otomatis sehingga server tetap responsif bahkan saat trafik padat.
+                  {language === 'ID'
+                    ? 'Membatasi permintaan maksimum hingga 120 request per menit per alamat IP. Menghindari serangan spam atau flooding dari bot otomatis sehingga server tetap responsif bahkan saat trafik padat.'
+                    : 'Limits requests to 120 per minute per IP address. Prevents automated spam/flooding to maintain server stability.'}
                 </p>
               </div>
 
@@ -1760,7 +1867,9 @@ export default function ProfileView() {
                   <span className="text-[8px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md font-black uppercase">AKTIF</span>
                 </div>
                 <p className="text-[10px] text-zinc-400 leading-relaxed">
-                  Membatasi kapasitas payload body permintaan maksimal <strong>10 Kilobyte</strong>. Melindungi server dari kelebihan pemakaian memori akibat pengiriman data berukuran raksasa secara sengaja.
+                  {language === 'ID'
+                    ? 'Membatasi kapasitas payload body permintaan maksimal 10 Kilobyte. Melindungi server dari kelebihan pemakaian memori akibat pengiriman data berukuran raksasa secara sengaja.'
+                    : 'Restricts request payload bodies to 10 Kilobytes. Protects the server from excessive memory use caused by massive payloads.'}
                 </p>
               </div>
 
@@ -1774,21 +1883,9 @@ export default function ProfileView() {
                   <span className="text-[8px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md font-black uppercase">AKTIF</span>
                 </div>
                 <p className="text-[10px] text-zinc-400 leading-relaxed">
-                  Menyuntikkan HTTP header standar pertahanan (XSS Auditor, X-Frame-Options, X-Content-Type-Options). Menghilangkan celah serangan Cross-Site Scripting (XSS) dan Clickjacking.
-                </p>
-              </div>
-
-              {/* Feature 4: Session Cloud Security */}
-              <div className="bg-gray-950/60 border border-gray-900/80 rounded-2xl p-3.5">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="font-bold text-white uppercase text-[10px] tracking-wider flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    Enkripsi Data SSL/TLS & Auth
-                  </span>
-                  <span className="text-[8px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md font-black uppercase">AKTIF</span>
-                </div>
-                <p className="text-[10px] text-zinc-400 leading-relaxed">
-                  Seluruh komunikasi data dienkripsi penuh menggunakan transport layer SSL/TLS. Integrasi Firebase Authentication menjamin kredensial pengguna terenkripsi secara aman di sisi Google Server.
+                  {language === 'ID'
+                    ? 'Menyuntikkan HTTP header standar pertahanan (XSS Auditor, X-Frame-Options, X-Content-Type-Options). Menghilangkan celah serangan Cross-Site Scripting (XSS) dan Clickjacking.'
+                    : 'Injects defensive HTTP headers (XSS Auditor, X-Frame-Options, X-Content-Type-Options) to shield against XSS and Clickjacking attacks.'}
                 </p>
               </div>
 
@@ -1798,7 +1895,7 @@ export default function ProfileView() {
               onClick={() => setActiveModal(null)}
               className="mt-5 w-full py-2 bg-[#82C341] hover:bg-[#99db4e] text-[#0d0f12] text-xs font-bold rounded-xl uppercase tracking-wider cursor-pointer"
             >
-              Kembali ke Menu
+              {language === 'ID' ? 'Kembali ke Menu' : 'Back to Menu'}
             </button>
           </div>
         </div>
